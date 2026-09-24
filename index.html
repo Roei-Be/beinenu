@@ -34,7 +34,7 @@ button{font:inherit;color:inherit;background:transparent;border:1px solid var(--
 <div class="progress"><div id="bar"></div></div>
 <section id="card" class="card"><div><div class="cardhead"><span id="category" class="pill"></span><span id="turn" class="turn"></span></div><p id="question" class="q"></p></div><p id="hint" class="hint"></p></section>
 <div class="actions"><button id="prev">הקודם</button><button id="skip">דלגו</button><button id="next">הבא ←</button></div>
-<fieldset class="categories" aria-describedby="categoryHelp categoryStatus"><legend>אילו קטגוריות לשלב במשחק?</legend><p id="categoryHelp" class="small category-help">בחרו לפחות קטגוריה אחת. שינוי הבחירה מתחיל מהקלף הראשון.</p><div id="categoryOptions" class="category-options"></div><p id="categoryStatus" class="small category-status" role="status" aria-live="polite"></p></fieldset>
+<fieldset class="categories" aria-describedby="categoryHelp categoryStatus"><legend>אילו קטגוריות לשלב במשחק?</legend><p id="categoryHelp" class="small category-help">בחרו לפחות קטגוריה אחת. שינוי הבחירה מתחיל מהקלף הראשון.</p><button id="selectAll" type="button" style="margin-bottom:8px">בחר הכל</button><div id="categoryOptions" class="category-options"></div><p id="categoryStatus" class="small category-status" role="status" aria-live="polite"></p></fieldset>
 <div class="bottom"><button id="shuffle">ערבבו את הקלפים</button></div>
 </main>
 <script>
@@ -82,6 +82,7 @@ function renderCategoryOptions(){
  }
 }
 function render(){
+ $('#selectAll').disabled=selectedCategories.length===CATEGORIES.length;
  const d=filtered(); if(!d.length)return; i=Math.max(0,Math.min(i,d.length-1));
  const x=d[i],m=META[x.cat],card=$('#card'),pill=$('#category');
  card.style.borderColor=m.color;card.style.background=`color-mix(in srgb,${m.color} 10%, #151922)`;
@@ -97,6 +98,12 @@ $('#prev').addEventListener('click',()=>{if(i>0){i--;render()}});
 $('#skip').addEventListener('click',()=>{if(i<filtered().length-1){i++;render()}});
 $('#reset').addEventListener('click',()=>{deck=[...ORIGINAL];i=0;render()});
 $('#shuffle').addEventListener('click',()=>{for(let n=deck.length-1;n>0;n--){const j=Math.floor(Math.random()*(n+1));[deck[n],deck[j]]=[deck[j],deck[n]]}i=0;render()});
+$('#selectAll').addEventListener('click',()=>{
+ if(selectedCategories.length===CATEGORIES.length)return;
+ selectedCategories=[...CATEGORIES];
+ document.querySelectorAll('#categoryOptions input').forEach(input=>{input.checked=true});
+ $('#categoryStatus').textContent='';i=0;render();
+});
 restoreState();
 renderCategoryOptions();
 if('serviceWorker' in navigator){
