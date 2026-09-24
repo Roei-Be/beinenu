@@ -1,4 +1,4 @@
-const CACHE='beinenu-v4';
+const CACHE='beinenu-v5';
 const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',e=>e.waitUntil((async()=>{
  const cache=await caches.open(CACHE);
